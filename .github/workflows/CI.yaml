@@ -57,22 +57,48 @@ jobs:
 
     - name: Set up Docker
       uses: docker/setup-docker@v1
-      
-    - name: Install KinD
+
+    - name: Check KinD installation
+      run: kind version || echoKinD not found"
+
+    - name: Check KinD cluster
+      id: check_cluster
       run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
+        if kind get clusters | grep -q kind; then
+          echo "::set-output name=cluster_exists::true"
+        else
+          echo "::set-output name=cluster_exists::false"
+        fi
 
     - name: Create KinD Cluster
+      if: steps.check_cluster.outputs.cluster_exists == 'false'
+      run: |
+        curl -Lokind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        kind create cluster --config=./kind-config.yaml
+
+    - name: Check KinD Cluster Existence
+      id: check_cluster
+      run: |
+        kind get clusters | grep kind || echo "::set-output name=cluster_exists::false"
+
+    - name: Create KinD Cluster
+      if: steps.check_cluster.outputs.cluster_exists != 'true'
       run: |
         kind create cluster --config=./kind-config.yaml
 
+    - name: Update KinD Cluster
+      if: steps.check_cluster.outputs.cluster_exists == 'true'
+      run: |
+        kind delete cluster --name=kind
+        kind create cluster --config=./kind-config.yaml
+    
+
     - name: Deploy Ingress Controller
       run: |
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/baremetal/deploy.yaml
-        until kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s ; do echo Waiting for Ingress Controller to be ready... && sleep 5 ; done
-
+        # Install Nginx Ingress Controller
+        kubectl apply -f nginx-ingress.yaml
 
     - name: Create http-echo Deployments
       run: |
