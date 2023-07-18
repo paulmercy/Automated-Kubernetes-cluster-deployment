@@ -1,0 +1,23 @@
+# foo-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      containers:
+      - name: foo
+        image: hashicorp/http-echo
+        args:
+        - "-text=foo test has been successful!"
+        ports:
+        - containerPort: 5678
+```
