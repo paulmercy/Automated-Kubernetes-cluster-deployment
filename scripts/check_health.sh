@@ -14,7 +14,7 @@ function check_ingress_controller() {
 
 # Check if the deployments are ready
 function check_deployments() {
-    local deployments=("foo-deployment" "bar-deployment") # Add other deployment names here if needed
+    local deployments=("bar-app" "foo-app") # Add other deployment names here if needed
 
     echo "Checking deployments status..."
     for deployment in "${deployments[@]}"; do

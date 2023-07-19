@@ -1,7 +1,7 @@
 #! /bin/bash
 
-bar_status=$(kubectl get pods --selector=app=bar -o json | jq -r '.items[0].status.phase')
-foo_status=$(kubectl get pods --selector=app=foo -o json | jq -r '.items[0].status.phase')
+bar_status=$(kubectl get pods --selector=app=http-echo -o json | jq -r '.items[0].status.phase')
+foo_status=$(kubectl get pods --selector=app=http-echo -o json | jq -r '.items[0].status.phase')
 
 
 if [[ "$bar_status" !=  "Running" ]]; then
