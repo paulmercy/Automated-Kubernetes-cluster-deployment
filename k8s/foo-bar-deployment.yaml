@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: foo-app
+  name: bar-app
   labels:
     app: http-echo
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: http-echo
@@ -14,11 +15,10 @@ spec:
         app: http-echo
     spec:
       containers:
-        - name: foo-app
-          # https://github.com/hashicorp/http-echo
-          image: hashicorp/http-echo:0.2.3
+        - name: bar-app
+          image: hashicorp/http-echo
           args:
-            - "-text=foo"
+            - "-text=bar test has been successful!"
           ports:
             - containerPort: 5678
           resources:
@@ -32,10 +32,11 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bar-app
+  name: foo-app
   labels:
     app: http-echo
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: http-echo
@@ -49,7 +50,8 @@ spec:
           # https://github.com/hashicorp/http-echo
           image: hashicorp/http-echo:0.2.3
           args:
-            - "-text=bar"
+            - "-text=foo test has been successful!"
+            
           ports:
             - containerPort: 5678
           resources:
@@ -59,6 +61,19 @@ spec:
             limits:
               cpu: "3m"
               memory: "8Mi"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bar-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: http-echo
+  ports:
+    # Default port used by the image
+    - port: 5678
+
 ---
 kind: Service
 apiVersion: v1
