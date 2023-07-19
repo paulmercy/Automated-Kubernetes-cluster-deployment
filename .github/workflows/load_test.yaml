@@ -1,0 +1,34 @@
+name: Load Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  load_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run Load Test
+      id: load_test
+      run: ./load_test.sh
+
+    - name: Create PR Comment
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const content = fs.readFileSync('load_test_results.txt', 'utf8');
+          const prNumber = '${{ github.event.number }}';
+          const octokit = context.github;
+          octokit.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: content,
+          });
