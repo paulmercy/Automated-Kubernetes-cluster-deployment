@@ -14,6 +14,7 @@ cd $SCRIPT_PARENT_DIR
 
 echo "deploying foo-bar-service"
 kubectl apply -f ./k8s/foo-bar-deployment.yaml
+kubectl apply -f ingress.yaml
 
 echo "waiting for foo-bar-service pods"
 kubectl wait pods -n default -l app=http-echo --for condition=Ready --timeout=${TIMEOUT}
