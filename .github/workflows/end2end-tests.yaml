@@ -70,8 +70,16 @@ jobs:
     - name: Deploy foo-bar-service app
       run: ./scripts/kind-deploy-app-foo-bar-service.sh
 
+    - name: Ingress Health Check
+      run: ./scripts/check_health.sh
 
-      
+    - name: Deployments health check
+      run: ./scripts/app_health.sh
+
+    
+
+
+
 
     - name: Get Cluster IP
       id: cluster_ip
@@ -84,7 +92,7 @@ jobs:
       run: |
         FOO_HOST="foo.localhost.$CLUSTER_IP.nip.io"
         BAR_HOST="bar.localhost.$CLUSTER_IP.nip.io"
-        ./load_test.sh "$FOO_HOST" "$BAR_HOST"
+        ./scripts/load_test.sh "$FOO_HOST" "$BAR_HOST"
 
     - name: Capture Load Test Results
       run: |
