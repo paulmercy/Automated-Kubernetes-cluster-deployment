@@ -17,7 +17,7 @@ jobs:
 
     - name: Run Load Test
       id: load_test
-      run: ./load_test.sh
+      run: ./scripts/load_test.sh
 
     - name: Create PR Comment
       uses: actions/github-script@v5
