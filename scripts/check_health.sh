@@ -3,7 +3,7 @@
 # Check if the Ingress controller is ready
 function check_ingress_controller() {
     echo "Checking Ingress controller status..."
-    kubectl wait pods -n ingress-nginx --for condition=Ready --timeout=180s
+    kubectl wait --for=condition=Ready pod --all -n ingress-nginx --timeout=180s
     if [ $? -eq 0 ]; then
         echo "Ingress controller is ready."
     else
@@ -11,6 +11,7 @@ function check_ingress_controller() {
         exit 1
     fi
 }
+
 
 # Check if the deployments are ready
 function check_deployments() {
