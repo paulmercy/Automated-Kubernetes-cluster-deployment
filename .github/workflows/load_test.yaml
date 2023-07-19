@@ -1,11 +1,12 @@
 name: Load Test
 
 on:
-    push:
-        branches: [ main ]
-    pull_request:
-        branches: [ main ]
-
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
 
 jobs:
   load_test:
@@ -26,11 +27,10 @@ jobs:
         script: |
           const fs = require('fs');
           const content = fs.readFileSync('load_test_results.txt', 'utf8');
-          const prNumber = '${{ github.event.number }}';
-          const octokit = context.github;
-          octokit.issues.createComment({
+          const prNumber = context.issue.number;
+          github.issues.createComment({
+            issue_number: prNumber,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: prNumber,
-            body: content,
+            body: content
           });
