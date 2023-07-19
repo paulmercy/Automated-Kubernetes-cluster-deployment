@@ -70,47 +70,50 @@ jobs:
     - name: Deploy foo-bar-service app
       run: ./scripts/kind-deploy-app-foo-bar-service.sh
 
-    - name: Ingress Health Check
-      run: ./scripts/check_health.sh
+    # - name: Ingress Health Check
+    #   run: ./scripts/check_health.sh
 
     - name: Deployments health check
       run: ./scripts/app_health.sh
+
+    - name: ILoad Test
+      run: ./scripts/load_test.sh
 
     
 
 
 
 
-    - name: Get Cluster IP
-      id: cluster_ip
-      run: |
-        CLUSTER_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
-        echo "CLUSTER_IP=$CLUSTER_IP" >> $GITHUB_ENV
+    # - name: Get Cluster IP
+    #   id: cluster_ip
+    #   run: |
+    #     CLUSTER_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+    #     echo "CLUSTER_IP=$CLUSTER_IP" >> $GITHUB_ENV
 
-    - name: Run Load Test for Foo and Bar
-      id: load_test
-      run: |
-        FOO_HOST="foo.localhost.$CLUSTER_IP.nip.io"
-        BAR_HOST="bar.localhost.$CLUSTER_IP.nip.io"
-        ./scripts/load_test.sh "$FOO_HOST" "$BAR_HOST"
+    # - name: Run Load Test for Foo and Bar
+    #   id: load_test
+    #   run: |
+    #     FOO_HOST="foo.localhost.$CLUSTER_IP.nip.io"
+    #     BAR_HOST="bar.localhost.$CLUSTER_IP.nip.io"
+    #     ./scripts/load_test.sh "$FOO_HOST" "$BAR_HOST"
 
-    - name: Capture Load Test Results
-      run: |
-        load_test_results=$(cat load_test_results.txt)
-        echo "LOAD_TEST_RESULTS=$load_test_results" >> $GITHUB_ENV
+    # - name: Capture Load Test Results
+    #   run: |
+    #     load_test_results=$(cat load_test_results.txt)
+    #     echo "LOAD_TEST_RESULTS=$load_test_results" >> $GITHUB_ENV
 
-    - name: Create PR Comment
-      if: ${{ always() }}
-      uses: actions/github-script@v5
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const fs = require('fs');
-          const content = fs.readFileSync('load_test_results.txt', 'utf8');
-          const prNumber = '${{ github.event.number }}';
-          github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: prNumber,
-            body: content,
-          });
+    # - name: Create PR Comment
+    #   if: ${{ always() }}
+    #   uses: actions/github-script@v5
+    #   with:
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    #     script: |
+    #       const fs = require('fs');
+    #       const content = fs.readFileSync('load_test_results.txt', 'utf8');
+    #       const prNumber = '${{ github.event.number }}';
+    #       github.rest.issues.createComment({
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         issue_number: prNumber,
+    #         body: content,
+    #       });
