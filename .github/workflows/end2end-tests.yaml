@@ -75,12 +75,14 @@ jobs:
 
     - name: Deployments health check
       run: |
-        chmod +x load_test.sh
+        chmod +x app_health.sh
         ./scripts/app_health.sh
 
 
     - name: ILoad Test
-      run: ./scripts/load_test.sh
+      run: |
+        chmod +x load_test.sh
+        ./scripts/load_test.sh
 
     
 
