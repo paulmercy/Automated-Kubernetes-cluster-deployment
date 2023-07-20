@@ -37,21 +37,32 @@ metallb:
 deploy-app-nginx-ingress-localhost:
 	./scripts/kind-deploy-app-nginx-ingress-localhost.sh
 
-#deploy-app-helloweb: @ Deploy helloweb
+
 deploy-app-helloweb:
 	./scripts/kind-deploy-app-helloweb.sh
 
-#deploy-app-golang-hello-world-web: @ Deploy golang-hello-world-web app
 deploy-app-golang-hello-world-web:
 	./scripts/kind-deploy-app-golang-hello-world-web.sh
 
-#deploy-app-foo-bar-service: @ Deploy foo-bar-service app
+
 deploy-app-foo-bar-service:
 	./scripts/kind-deploy-app-foo-bar-service.sh
+
+ingress-test:
+	./scripts/ingress_test.sh
+
+deployment-health:
+	./scripts/deployment-health.sh
+
+Cluster-Health-check:
+	./scripts/cluster-health.sh
+
+Generate-a-load-of-randomized-traffic:
+	./scripts/load_test.sh
 
 build-kubectl-test-image:
 	docker build -f ./images/Dockerfile -t kubectl-test  .
 
-#delete-cluster: @ Delete K8s cluster
+
 delete-cluster:
 	./scripts/kind-delete.sh

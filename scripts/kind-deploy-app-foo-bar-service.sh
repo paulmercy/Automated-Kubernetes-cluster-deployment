@@ -28,4 +28,9 @@ for _ in {1..10}; do
   curl -s ${LB_IP}:5678
 done
 
+# Load testing with ApacheBench (ab)
+echo "Starting load test..."
+ab -n 100 -c 10 http://${LB_IP}:5678/
+
 cd $LAUNCH_DIR
+
