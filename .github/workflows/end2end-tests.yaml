@@ -68,7 +68,7 @@ jobs:
       run: ./scripts/kind-deploy-app-golang-hello-world-web.sh
       
     - name: Deploy foo-bar-service app
-      run: /kind-deploy-app-foo-bar-service.sh
+      run: ./scripts/kind-deploy-app-foo-bar-service.sh
 
     - name: Configure Ingress routing
       run: |
