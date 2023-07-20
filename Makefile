@@ -48,10 +48,10 @@ deploy-app-golang-hello-world-web:
 deploy-app-foo-bar-service:
 	./scripts/kind-deploy-app-foo-bar-service.sh
 
-ingress-test:
+ingress-rule:
 	./scripts/ingress_test.sh
 
-deployment-health:
+Check-deployment-health:
 	./scripts/deployment-health.sh
 
 Cluster-Health-check:
