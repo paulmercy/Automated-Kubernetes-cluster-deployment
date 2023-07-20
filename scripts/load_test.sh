@@ -44,7 +44,7 @@ function generate_load() {
     comment="Load Testing Results for $service_name:
     - Average HTTP request duration: $avg_duration seconds
     - 90th percentile HTTP request duration: $p90_duration seconds
-    - 95th percentile HTTP request duration: $p95_duration seconds"
+    - 95th percentile HTTP request duration: $p95_duration seconds
     - Percentage of failed HTTP requests: $failed_requests %
     - Requests per second handled: $reqs_per_second"
 
