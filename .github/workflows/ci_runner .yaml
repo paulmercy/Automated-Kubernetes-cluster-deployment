@@ -94,14 +94,10 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const fs = require('fs');
-          const content = fs.readFileSync('load_test_results.txt', 'utf8');
-          const prNumber = '${{ github.event.number }}';
-          pullRequestOpened: |
-            👋 @{{ author }}
-            content
-
+        pullRequestOpened: |
+          👋 @{{ author }}
+          Thank you for raising your pull request.
+          Please make sure you have followed our contributing guidelines. We will review it as soon as possible
 
     # - name: Create PR Comment
     #   uses: actions/github-script@v6
