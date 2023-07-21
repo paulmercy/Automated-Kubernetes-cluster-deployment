@@ -61,8 +61,8 @@ cluster-health-check:
 generate-a-load-of-randomized-traffic:
 	./scripts/load_test.sh
 
-build-kubectl-test-image:
-	docker build -f ./images/Dockerfile -t kubectl-test .
+# build-kubectl-test-image:
+# 	docker build -f ./images/Dockerfile -t kubectl-test .
 
 #delete-cluster: @ Delete K8s cluster
 delete-cluster:
