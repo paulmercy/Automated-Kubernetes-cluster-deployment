@@ -92,7 +92,8 @@ jobs:
       if: ${{ always() }}
       uses: wow-actions/auto-comment@v1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const fs = require('fs');
           const content = fs.readFileSync('load_test_results.txt', 'utf8');
@@ -100,3 +101,17 @@ jobs:
           pullRequestOpened: |
             👋 @{{ author }}
             content
+
+
+    # - name: Create PR Comment
+    #   uses: actions/github-script@v6
+    #   with:
+    #     script: |
+    #       github.rest.issues.createComment({
+    #         issue_number: '${{ github.event.number }}',
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: '👋 Thanks for reporting!'
+    #       })
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
