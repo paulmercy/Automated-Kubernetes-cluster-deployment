@@ -72,19 +72,17 @@ spec:
     app: bar-service
   ports:
     - port: 5678
-      protocol: TCP
-
+      
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: foo-service
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: foo-service
   ports:
-    - protocol: TCP
-      port: 5678
+    - port: 5678
       # targetPort: 8080
 
