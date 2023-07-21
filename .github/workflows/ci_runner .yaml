@@ -5,6 +5,8 @@ on:
   #   branches: [ main ]
   pull_request:
     branches: [ main ]
+    types:
+      - opened
 
 jobs:
   build:
@@ -78,26 +80,37 @@ jobs:
     - name: Install Apache Benchmark
       run: sudo apt-get update && sudo apt-get install apache2-utils -y
     
-    - name: Load Test, Capture Load Testing Result & Post Load Testing Result as a Comment
+    - name: Load Test, Capture Load Testing Result
       run: |
           chmod +x ./scripts/load_test.sh
           ./scripts/load_test.sh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    
-
-
-   
-    - name: Create PR Comment
+    - name: PR Comment with Test Results
+      if: ${{ always() }}
       uses: actions/github-script@v6
       with:
         script: |
-          github.rest.issues.createComment({
-            issue_number: '${{ github.event.number }}',
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '👋 Thanks for reporting!'
-          })
+          const fs = require('fs');
+
+          const filePath = 'load_test_results.txt';
+          if (fs.existsSync(filePath)) {
+            const content = fs.readFileSync(filePath, 'utf8');
+            const prNumber = '${{ github.event.number }}';
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `## Test Results\n\n${content}`,
+              });
+              console.log('PR comment with test results created successfully.');
+            } catch (error) {
+              console.error('Error creating PR comment:', error);
+            }
+          } else {
+            console.warn('The file "load_test_results.txt" does not exist in the repository.');
+          }
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

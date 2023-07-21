@@ -1,6 +1,6 @@
 Load Testing Results for bar:
-    - Average HTTP request duration:  ms
-    - 90th percentile HTTP request duration:  ms
-    - 95th percentile HTTP request duration:  ms
+    - Average HTTP request duration: 0.000 seconds
+    - 90th percentile HTTP request duration: 0.008478 seconds
+    - 95th percentile HTTP request duration: 0.009121 seconds
     - Percentage of failed HTTP requests:  %
     - Requests per second handled: 
