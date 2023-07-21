@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Makefile Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+
+        h2 {
+            color: #0099cc;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        pre {
+            background-color: #2e3141;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Makefile Documentation</h1>
+
+    <h2>1. help</h2>
+    <p>Displays a list of available tasks with their descriptions.</p>
+    <pre><code>make help</code></pre>
+
+    <h2>2. install-all</h2>
+    <p>Installs all components required for the Kubernetes cluster, including kind (Kubernetes IN Docker), Nginx Ingress, MetalLB, and demo workloads.</p>
+    <pre><code>make install-all</code></pre>
+
+    <!-- Rest of the content ... -->
+    <h1>Makefile Documentation</h1>
+
+    <h2>1. help</h2>
+    <p>Displays a list of available tasks with their descriptions.</p>
+    <pre><code>make help</code></pre>
+
+    <h2>2. install-all</h2>
+    <p>Installs all components required for the Kubernetes cluster, including kind (Kubernetes IN Docker), Nginx Ingress, MetalLB, and demo workloads.</p>
+    <pre><code>make install-all</code></pre>
+
+    <h2>3. install-all-no-demo-workloads</h2>
+    <p>Installs all components required for the Kubernetes cluster, excluding the demo workloads.</p>
+    <pre><code>make install-all-no-demo-workloads</code></pre>
+
+    <h2>4. create-cluster</h2>
+    <p>Creates a Kubernetes cluster using kind.</p>
+    <pre><code>make create-cluster</code></pre>
+
+    <h2>5. export-cert</h2>
+    <p>Exports Kubernetes keys (client) and certificates (client, cluster CA).</p>
+    <pre><code>make export-cert</code></pre>
+
+    <h2>6. k8s-dashboard</h2>
+    <p>Installs the Kubernetes dashboard.</p>
+    <pre><code>make k8s-dashboard</code></pre>
+
+    <h2>7. nginx-ingress</h2>
+    <p>Installs the Nginx Ingress controller.</p>
+    <pre><code>make nginx-ingress</code></pre>
+
+    <h2>8. metallb</h2>
+    <p>Installs the MetalLB load balancer.</p>
+    <pre><code>make metallb</code></pre>
+
+    <h2>9. deploy-app-nginx-ingress-localhost</h2>
+    <p>Deploys an httpd web server and creates an ingress rule for localhost (http://demo.localdev.me:80/). It also patches the ingress-nginx-controller service type to LoadBalancer.</p>
+    <pre><code>make deploy-app-nginx-ingress-localhost</code></pre>
+
+    <h2>10. deploy-app-helloweb</h2>
+    <p>Deploys the "helloweb" app.</p>
+    <pre><code>make deploy-app-helloweb</code></pre>
+
+    <h2>11. deploy-app-golang-hello-world-web</h2>
+    <p>Deploys the "golang-hello-world-web" app.</p>
+    <pre><code>make deploy-app-golang-hello-world-web</code></pre>
+
+    <h2>12. deploy-app-foo-bar-service</h2>
+    <p>Deploys the "foo-bar-service" app.</p>
+    <pre><code>make deploy-app-foo-bar-service</code></pre>
+
+    <h2>13. ingress-rule</h2>
+    <p>Adds an ingress rule to route traffic to different subdomains.</p>
+    <pre><code>make ingress-rule</code></pre>
+
+    <h2>14. cluster-health-check</h2>
+    <p>Checks the health status of the Kubernetes cluster and reports the objects and resources.</p>
+    <pre><code>make cluster-health-check</code></pre>
+
+    <h2>15. generate-a-load-of-randomized-traffic</h2>
+    <p>Generates random traffic to test the cluster's performance.</p>
+    <pre><code>make generate-a-load-of-randomized-traffic</code></pre>
+
+    <h2>16. build-kubectl-test-image</h2>
+    <p>Builds a Docker image for kubectl testing.</p>
+    <pre><code>make build-kubectl-test-image</code></pre>
+
+    <h2>17. delete-cluster</h2>
+    <p>Deletes the Kubernetes cluster.</p>
+    <pre><code>make delete-cluster</code></pre>
+
+    <h2>18. kill-switch</h2>
+    <p><strong>DANGER ZONE!</strong> This is a kill switch that indiscriminately deletes all services and pods across all namespaces. Use with extreme caution.</p>
+    <pre><code>make kill-switch</code></pre>
+
+    <p><strong>Note:</strong> Before using any of these commands, ensure you have the necessary permissions and understand the implications of executing certain actions, especially those marked as "DANGER ZONE" like the <code>kill-switch</code>. Always exercise caution and verify the impact of each command before executing it.</p>
+</body>
+</html>
