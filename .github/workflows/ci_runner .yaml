@@ -88,26 +88,16 @@ jobs:
     
 
 
+   
     - name: Create PR Comment
-      if: ${{ always() }}
-      uses: wow-actions/auto-comment@v1
+      uses: actions/github-script@v6
       with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: '${{ github.event.number }}',
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '👋 Thanks for reporting!'
+          })
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # github-token: ${{ secrets.GITHUB_TOKEN }}
-        pullRequestOpened: |
-          👋 @{{ author }}
-          Thank you for raising your pull request.
-          Please make sure you have followed our contributing guidelines. We will review it as soon as possible
-
-    # - name: Create PR Comment
-    #   uses: actions/github-script@v6
-    #   with:
-    #     script: |
-    #       github.rest.issues.createComment({
-    #         issue_number: '${{ github.event.number }}',
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         body: '👋 Thanks for reporting!'
-    #       })
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
