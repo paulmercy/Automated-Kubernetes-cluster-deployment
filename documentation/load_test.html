@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Load Testing Script Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+
+        h2 {
+            color: #0099cc;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Load Testing Script Documentation</h1>
+
+    <h2>Overview</h2>
+    <p>
+        This Bash script is designed to perform a load test on two specific hosts named 'foo' and 'bar'. The script
+        generates a specified number of HTTP requests to each host, measures their response times, and calculates various
+        load testing statistics. The results are then saved and posted as a comment on a GitHub Pull Request using GitHub
+        Actions environment variables.
+    </p>
+
+    <h2>Prerequisites</h2>
+    <p>
+        Before running this load testing script, ensure the following prerequisites are met:</p>
+    <ul>
+        <li><b>kubectl</b>: The Kubernetes command-line tool, properly configured to interact with the target Kubernetes
+            cluster.</li>
+        <li>The target Kubernetes cluster is operational, and the desired services (e.g., 'foo' and 'bar') are deployed and
+            accessible.</li>
+    </ul>
+
+    <h2>Script Configuration</h2>
+    <p>
+        The following configuration options are available in the script:</p>
+    <ul>
+        <li><b>NUM_REQUESTS</b>: The number of HTTP requests to be sent to each host during the load test. Modify this
+            variable to adjust the load test size.</li>
+        <li><b>CLUSTER_IP</b>: This variable is populated with the cluster's internal IP address to construct the hosts for
+            'foo' and 'bar'. Do not modify this manually; the script handles it automatically.</li>
+        <li><b>FOO_HOST</b>: The host address for the 'foo' service. It is constructed using the cluster IP and the 'nip.io'
+            domain.</li>
+        <li><b>BAR_HOST</b>: The host address for the 'bar' service. It is constructed using the cluster IP and the 'nip.io'
+            domain.</li>
+    </ul>
+
+    <h2>Load Test Process</h2>
+    <p>
+        <ol>
+            <li><b>Starting the Load Test</b>: When the script is executed, it begins by displaying "Starting load test..."
+                to indicate the load testing process has commenced.</li>
+            <li><b>Capture Deployment Logs</b>: The script captures the logs of deployments during the load testing process
+                to ensure visibility into any issues that may arise during the tests. The logs are redirected to a file named
+                "deployments_logs.txt" for later analysis.</li>
+            <li><b>Load Generation for 'foo' and 'bar'</b>: The script calls the <b>generate_load()</b> function twice,
+                generating load for both 'foo' and 'bar' services. The <b>generate_load()</b> function iterates over
+                <b>NUM_REQUESTS</b> times, sending HTTP requests with random paths to each host.</li>
+            <li><b>Load Test Results and Statistics</b>: For each host, the script collects response times from the HTTP
+                requests and calculates the following load testing statistics:
+                <ul>
+                    <li>Average HTTP request duration.</li>
+                    <li>90th percentile HTTP request duration.</li>
+                    <li>95th percentile HTTP request duration.</li>
+                    <li>Percentage of failed HTTP requests.</li>
+                    <li>Requests per second handled.</li>
+                </ul>
+            </li>
+            <li><b>Save and Post Load Test Results</b>: The calculated load testing statistics and results are saved in a
+                file named "load_test_results.txt". Additionally, the script posts the results as a comment on the
+                corresponding GitHub Pull Request using GitHub Actions environment variables. Please ensure this script is
+                executed within the context of a GitHub Actions workflow for the comment posting to work correctly.</li>
+            <li><b>Load Test Completion</b>: After completing the load testing for both 'foo' and 'bar' services, the script
+                stops capturing deployment logs and prints "Load testing completed. All results are saved."</li>
+        </ol>
+    </p>
+
+    <h2>Execution</h2>
+    <p>
+        To execute the load testing script:
+        <ol>
+            <li>Ensure you meet the prerequisites mentioned earlier.</li>
+            <li>Save the script to a file, e.g., <b>load_test_script.sh</b>.</li>
+            <li>Make the script executable by running: <b>chmod +x load_test_script.sh</b>.</li>
+            <li>Execute the script by running: <b>./load_test_script.sh</b>.</li>
+        </ol>
+    </p>
+
+    <h2>Important Notes</h2>
+    <p>
+        <ul>
+            <li>This script assumes that the Kubernetes cluster is operational and accessible using <b>kubectl</b>.</li>
+            <li>The script generates load for specific services ('foo' and 'bar') accessible via the configured host
+                addresses.</li>
+            <li>Ensure that the <b>NUM_REQUESTS</b> variable is set to an appropriate value, considering the expected load on
+                the services.</li>
+            <li>The script relies on GitHub Actions environment variables to post results as comments on GitHub Pull
+                Requests. Ensure the script is executed within a GitHub Actions workflow for this feature to work as
+                intended.</li>
+        </ul>
+    </p>
+
+    <h2>Disclaimer</h2>
+    <p>
+        This load testing script is provided as-is without any warranty. Please use it responsibly and ensure you have the
+        necessary permissions and authorization to perform load testing on the target services.
+    </p>
+</body>
+
+</html>

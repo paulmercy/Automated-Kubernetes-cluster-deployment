@@ -1,8 +1,8 @@
 name: CI runner 
 
 on:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -43,7 +43,7 @@ jobs:
     - name: Install k8s dashboard
       run: ./scripts/kind-add-dashboard.sh
 
-    - name: Install Nginx ingress
+    - name: Install Nginx ingress Controller
       run: ./scripts/kind-add-ingress-nginx.sh
 
     - name: Install MetalLB
@@ -69,6 +69,11 @@ jobs:
       run: |
         chmod +x ./scripts/cluster-health.sh
         ./scripts/cluster-health.sh
+
+    - name: Running APP State
+      run: |
+        chmod +x ./scripts/app_health.sh
+        ./scripts/app_health.sh
 
     - name: Install Apache Benchmark
       run: sudo apt-get update && sudo apt-get install apache2-utils -y

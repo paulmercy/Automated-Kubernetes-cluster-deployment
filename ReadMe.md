@@ -171,6 +171,11 @@ kubectl apply -f ./k8s/prometheus.yaml
 kubectl --namespace monitoring get pods -l release=kind-prometheus
 ```
 
+Kube-prometheus-stack-Grafana
+```bash
+    ./scripts/kind-add-kube-prometheus-stack.sh
+```
+
 Delete kube-prometheus stack
 ```bash
 kubectl delete -f ./k8s/prometheus.yaml

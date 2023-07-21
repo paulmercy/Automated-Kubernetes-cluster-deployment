@@ -9,12 +9,23 @@ function generate_load() {
     local service_name=$2
 
     echo "Generating load for $host..."
+    failed_requests=0
+    start_time=$(date +%s)
     for ((i=0; i<$NUM_REQUESTS; i++))
     do
         # Generate random paths for HTTP requests (e.g., /random-path-123)
         random_path="/random-path-$((RANDOM % 1000))"
-        curl -s -o /dev/null -w "%{time_total}\n" "http://$host$random_path" >> "${service_name}_load_test_results.txt"
+        response=$(curl -s -o /dev/null -w "%{http_code} %{time_total}\n" "http://$host$random_path")
+        http_code=$(echo "$response" | awk '{print $1}')
+        time_total=$(echo "$response" | awk '{print $2}')
+        if [ "$http_code" != "200" ]; then
+            ((failed_requests++))
+        fi
+        echo "$time_total" >> "${service_name}_load_test_results.txt"
     done
+    end_time=$(date +%s)
+    total_duration=$((end_time - start_time))
+    reqs_per_second=$(awk "BEGIN {printf \"%.2f\", $NUM_REQUESTS / $total_duration}")
 
     echo "Load test for $host completed. Results are saved in ${service_name}_load_test_results.txt"
 
@@ -25,21 +36,18 @@ function generate_load() {
     p95_index=$((NUM_REQUESTS * 95 / 100))
     p90_duration=$(sed -n "${p90_index}p" <<< "$sorted_durations")
     p95_duration=$(sed -n "${p95_index}p" <<< "$sorted_durations")
-    failed_requests=$(awk '/Failed requests/ {print $3}' "${service_name}_load_test_results.txt")
-    reqs_per_second=$(awk '/Requests per second/ {print $4}' "${service_name}_load_test_results.txt")
 
     # Post the results as a comment on the GitHub Pull Request using GitHub Actions environment variables
     comment="Load Testing Results for $service_name:
     - Average HTTP request duration: $avg_duration seconds
     - 90th percentile HTTP request duration: $p90_duration seconds
     - 95th percentile HTTP request duration: $p95_duration seconds
-    - Percentage of failed HTTP requests: $failed_requests %
+    - Percentage of failed HTTP requests: $((failed_requests * 100 / NUM_REQUESTS)) %
     - Requests per second handled: $reqs_per_second"
 
     echo "$comment" > "load_test_results.txt"
     echo "$comment" | tee "load_test_results.txt"
     # echo "$comment" | gh issue comment ${{ github.event.issue.number }} --body -
-
 
     # Post the comment using GitHub Actions environment variable
     echo "::add-comment::$comment"

@@ -31,9 +31,10 @@ echo -n "Grafana Pwd:  " && kubectl get secret kube-prometheus-stack-grafana -n 
 
 service_ip=$(kubectl get services kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 echo "Grafana URL: ${service_ip}:80/"
-# xdg-open  ${service_ip}:80/
 
-# kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
-# xdg-open http://localhost:9090/targets
+xdg-open  ${service_ip}:80/
+
+kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
+xdg-open http://localhost:9090/targets
 
 cd $LAUNCH_DIR
