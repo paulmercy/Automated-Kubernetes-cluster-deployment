@@ -80,7 +80,7 @@ jobs:
     - name: Install Apache Benchmark
       run: sudo apt-get update && sudo apt-get install apache2-utils -y
     
-    - name: Load Test, Capture Load Testing Result & Post Load Testing Result as a Comment
+    - name: Load Test, Capture Load Testing Result
       run: |
           chmod +x ./scripts/load_test.sh
           ./scripts/load_test.sh
@@ -114,18 +114,3 @@ jobs:
           }
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-    # - name: Create PR Comment
-    #   uses: actions/github-script@v6
-    #   with:
-    #     script: |
-    #       github.rest.issues.createComment({
-    #         issue_number: '${{ github.event.number }}',
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         body: '👋 Thanks for reporting!'
-    #       })
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

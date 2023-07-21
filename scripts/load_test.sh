@@ -1,45 +1,53 @@
 #!/bin/bash
 
-# Number of request
+# Number of requests
 NUM_REQUESTS=1000
 
 # Function to generate load for a specific host
 function generate_load() {
-    local host=$1
-    local service_name=$2
+    local host=\$1
+    local service_name=\$2
+    local failed_requests=0
+    local start_time=$(date +%s)
 
     echo "Generating load for $host..."
     for ((i=0; i<$NUM_REQUESTS; i++))
     do
         # Generate random paths for HTTP requests (e.g., /random-path-123)
         random_path="/random-path-$((RANDOM % 1000))"
-        curl -s -o /dev/null -w "%{time_total}\n" "http://$host$random_path" >> "${service_name}_load_test_results.txt"
+        http_status=$(curl -s -o /dev/null -w "%{http_code}\n%{time_total}\n" "http://$host$random_path" >> "${service_name}_durations.txt")
+        if ((http_status >= 400 && http_status <= 599)); then
+            ((failed_requests++))
+        fi
     done
+    local end_time=$(date +%s)
 
     echo "Load test for $host completed. Results are saved in ${service_name}_load_test_results.txt"
 
     # Calculate load testing statistics
-    avg_duration=$(awk '{ sum += $1 } END { printf "%.3f", sum/NR }' "${service_name}_load_test_results.txt")
-    sorted_durations=$(sort -n "${service_name}_load_test_results.txt")
-    p90_index=$((NUM_REQUESTS * 90 / 100))
-    p95_index=$((NUM_REQUESTS * 95 / 100))
-    p90_duration=$(sed -n "${p90_index}p" <<< "$sorted_durations")
-    p95_duration=$(sed -n "${p95_index}p" <<< "$sorted_durations")
-    failed_requests=$(awk '/Failed requests/ {print $3}' "${service_name}_load_test_results.txt")
-    reqs_per_second=$(awk '/Requests per second/ {print $4}' "${service_name}_load_test_results.txt")
+    local total_time=$((end_time - start_time))
+    local reqs_per_second=$(awk -v total=$NUM_REQUESTS -v time=$total_time 'BEGIN { printf "%.2f", total/time }')
+    local failed_requests_percentage=$(awk -v failed=$failed_requests -v total=$NUM_REQUESTS 'BEGIN { printf "%.2f", (failed/total)*100 }')
+
+    local avg_duration=$(awk '{ sum += \$1 } END { printf "%.3f", sum/NR }' "${service_name}_durations.txt")
+    local sorted_durations=$(sort -n "${service_name}_durations.txt")
+    local actual_num_requests=$(wc -l < "${service_name}_durations.txt")
+    local p90_index=$((actual_num_requests * 90 / 100))
+    local p95_index=$((actual_num_requests * 95 / 100))
+    local p90_duration=$(sed -n "${p90_index}p" "${service_name}_durations.txt")
+    local p95_duration=$(sed -n "${p95_index}p" "${service_name}_durations.txt")
 
     # Post the results as a comment on the GitHub Pull Request using GitHub Actions environment variables
-    comment="Load Testing Results for $service_name:
+    local comment="Load Testing Results for $service_name:
     - Average HTTP request duration: $avg_duration seconds
     - 90th percentile HTTP request duration: $p90_duration seconds
     - 95th percentile HTTP request duration: $p95_duration seconds
-    # - Percentage of failed HTTP requests: $failed_requests %
-    # - Requests per second handled: $reqs_per_second"
+    - Percentage of failed HTTP requests: $failed_requests_percentage %
+    - Requests per second handled: $reqs_per_second"
 
     echo "$comment" > "load_test_results.txt"
     echo "$comment" | tee "load_test_results.txt"
     # echo "$comment" | gh issue comment ${{ github.event.issue.number }} --body -
-
 
     # Post the comment using GitHub Actions environment variable
     echo "::add-comment::$comment"
