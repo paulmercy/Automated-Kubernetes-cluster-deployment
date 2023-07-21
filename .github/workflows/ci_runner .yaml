@@ -88,18 +88,15 @@ jobs:
     
 
 
-    # - name: Create PR Comment
-    #   if: ${{ always() }}
-    #   uses: actions/github-script@v5
-    #   with:
-    #     github-token: ${{ secrets.GITHUB_TOKEN }}
-    #     script: |
-    #       const fs = require('fs');
-    #       const content = fs.readFileSync('load_test_results.txt', 'utf8');
-    #       const prNumber = '${{ github.event.number }}';
-    #       github.rest.issues.createComment({
-    #         owner: context.repo.owner,
-    #         repo: context.repo.repo,
-    #         issue_number: prNumber,
-    #         body: content,
-    #       });
+    - name: Create PR Comment
+      if: ${{ always() }}
+      uses: wow-actions/auto-comment@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const content = fs.readFileSync('load_test_results.txt', 'utf8');
+          const prNumber = '${{ github.event.number }}';
+          pullRequestOpened: |
+            👋 @{{ author }}
+            content
