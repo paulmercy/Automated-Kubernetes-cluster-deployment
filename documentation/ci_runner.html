@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CI Runner - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+        color: #0066cc;
+    }
+
+    h2 {
+        color: #0099cc;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+    }
+
+    ul {
+        margin-left: 20px;
+    }
+
+    ol {
+        margin-left: 20px;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+
+    code {
+        background-color: #f7f7f7;
+        padding: 2px 4px;
+        border: 1px solid #ccc;
+    }
+
+    pre {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border: 1px solid #ccc;
+        overflow-x: auto;
+    }
+</style>
+</head>
+<body>
+    <h1>CI Runner - Documentation</h1>
+    <p>
+        This documentation provides an overview of the CI Runner workflow defined in the GitHub Actions configuration file. The workflow is designed to build and deploy Kubernetes applications using a Kubernetes cluster managed by Kind. It also includes steps to perform load testing and post the test results as comments on GitHub Pull Requests.
+    </p>
+    <h2>Workflow Description</h2>
+<p>
+    The CI Runner workflow triggers on pull requests to the 'main' branch. The main job named 'build' runs on an 'ubuntu-latest' runner and follows a matrix strategy with different versions of Kubernetes and Kind.
+</p>
+
+<h2>Workflow Steps</h2>
+<ol>
+    <li>
+        <strong>Checkout code:</strong> This step checks out the repository code for further actions to be performed on the codebase.
+    </li>
+    <li>
+        <strong>Install Kubernetes Cluster:</strong> This step sets up the Kubernetes cluster using Kind with specific versions of Kubernetes, Kind, and kubectl defined in the matrix. It also installs the necessary components for the cluster.
+    </li>
+    <li>
+        <strong>kubectl Version:</strong> This step verifies the kubectl version in the environment.
+    </li>
+    <li>
+        <strong>k8s pods:</strong> This step retrieves and lists the pods in the 'kube-system' namespace of the Kubernetes cluster.
+    </li>
+    <li>
+        <strong>Export k8s keys(client) and certificates(client, cluster CA):</strong> This step exports Kubernetes client keys and certificates for further use in the workflow.
+    </li>
+    <li>
+        <strong>Install k8s dashboard:</strong> This step installs the Kubernetes dashboard to manage the cluster.
+    </li>
+    <li>
+        <strong>Install Nginx ingress Controller:</strong> This step installs the Nginx ingress controller to handle incoming HTTP requests.
+    </li>
+    <li>
+        <strong>Install MetalLB:</strong> This step installs MetalLB, a load balancer, to expose services within the cluster to external IPs.
+    </li>
+    <li>
+        <strong>Deploy httpd web server and create an ingress rule for a localhost (http://demo.localdev.me:80/), Patch ingress-nginx-controller service type -> LoadBlancer:</strong> This step deploys the httpd web server, creates an ingress rule for localhost, and patches the ingress-nginx-controller service type to 'LoadBalancer.'
+    </li>
+    <li>
+        <strong>Deploy helloweb app:</strong> This step deploys the 'helloweb' app to the Kubernetes cluster.
+    </li>
+    <li>
+        <strong>Deploy golang-hello-world-web app:</strong> This step deploys the 'golang-hello-world-web' app to the Kubernetes cluster.
+    </li>
+    <li>
+        <strong>Deploy foo-bar-service app:</strong> This step deploys the 'foo-bar-service' app to the Kubernetes cluster.
+    </li>
+    <li>
+        <strong>Configure Ingress routing:</strong> This step applies the Kubernetes ingress configuration defined in the 'ingress.yaml' file.
+    </li>
+    <li>
+        <strong>Check Ingress and Deployments health:</strong> This step checks the health status of the Ingress and Deployments in the Kubernetes cluster using the 'cluster-health.sh' script.
+    </li>
+    <li>
+        <strong>Running APP State:</strong> This step checks the state of the deployed apps in the Kubernetes cluster using the 'app_health.sh' script.
+    </li>
+    <li>
+        <strong>Install Apache Benchmark:</strong> This step installs Apache Benchmark tool to perform load testing.
+    </li>
+    <li>
+        <strong>Load Test, Capture Load Testing Result:</strong> This step performs the load test using the 'load_test.sh' script and captures the load testing results in 'load_test_results.txt'.
+    </li>
+    <li>
+        <strong>PR Comment with Test Results:</strong> This conditional step comments on the GitHub Pull Request with the load testing results using the 'github-script' action.
+    </li>
+</ol>
+
+<h2>Note</h2>
+<p>
+    The CI Runner workflow assumes that the necessary scripts and configurations, such as 'kind-config.yaml,' 'ingress.yaml,' and the scripts in the 'scripts' directory, are present in the repository. Additionally, ensure that the required Kubernetes applications are correctly deployed and accessible by the load test and other steps in the workflow.
+</p>
+
+<h2>Usage</h2>
+<p>
+    To use this workflow, copy the provided GitHub Actions configuration into your repository's '.github/workflows' directory. Make sure to adapt the paths and script names according to your project's setup.
+</p>
+
+</body>
+</html>
